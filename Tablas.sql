@@ -10,7 +10,7 @@ CREATE TABLE institucion(
   	numeroLugar VARCHAR(60) NOT NULL,
   	ciudad	VARCHAR(60) NOT NULL,
   	correo VARCHAR(60) UNIQUE NOT NULL,
-  	estado VARCHAR(60) NOT NULL
+	estado VARCHAR(60) NOT NULL DEFAULT 'pendiente'
 );
 -- Tabla url_documento_institucion
 CREATE TABLE urlDocumentoInstitucion(
@@ -50,18 +50,19 @@ CREATE TABLE usuario(
   	codigoEstudiantil INT,
   FOREIGN KEY (idInstitucion) REFERENCES institucion(idInstitucion)
   ON DELETE CASCADE
+  
 );
 
 --tabla_admin_usuario
 CREATE TABLE adminUsuario(
 	idAdmin INT,
   	idUsuario INT,
-  	estadoUsuario VARCHAR(60) NOT NULL,
+  	estadoUsuario VARCHAR(60) NOT NULL DEFAULT 'pendiente',
   	descripcion TEXT,
   	fechaRevision TIMESTAMP NOT NULL,
   PRIMARY KEY(idAdmin, idUsuario),
-  FOREIGN KEY (idAdmin) REFERENCES administrador(idAdmin),
-  on delete set NULL 
+  FOREIGN KEY (idAdmin) REFERENCES administrador(idAdmin)
+  on delete set NULL,
   FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
   on delete CASCADE
 );
@@ -74,6 +75,7 @@ CREATE TABLE urllmgDocumentoUsuario(
   nombreDocumento VARCHAR(60),
   FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
   on DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 -- tabla PQRS
@@ -86,6 +88,7 @@ CREATE TABLE PQRS(
   	latitud DECIMAL(9,6),
   	longitud DECIMAL(9,6),
   	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
+  	ON UPDATE CASCADE
 );
 
 --tabla viaje
@@ -116,8 +119,9 @@ Create TABLE pasajero(
 	idUsuario INT PRIMARY KEY,
   	estatuto VARCHAR(60),
   	cantidadViajesTomados INT,
-  	estadoPasajero VARCHAR(60),
+  	estadoPasajero VARCHAR(60) DEFAULT 'pendiente',
   	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
+  	ON DELETE CASCADE
 );
 
 -- tabla vehiculo
@@ -137,6 +141,7 @@ CREATE TABLE urllmgDocumentoVehiculo(
   	urllmgDocumento TEXT,
   	nombreDocumento VARCHAR(60),
   	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
+  	
 );
 
 -- tabla conductor
@@ -144,7 +149,7 @@ CREATE TABLE conductor(
 	idUsuario INT PRIMARY KEY,
   	idVehiculo INT,
   	numeroDeLicencia INT,
-  	estadoConductor VARCHAR(60),
+  	estadoConductor VARCHAR(60) DEFAULT 'pendiente',
   	cantidadViajesRealizados INT,
   	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 );
@@ -169,7 +174,7 @@ CREATE TABLE ruta(
   	horaDeSalida TIME,
   	fecha DATE,
   	tipoDeRuta VARCHAR(60),
-  	estado VARCHAR(60),
+  	estado VARCHAR(60) DEFAULT '',
   	asientosDisponibles INT
 );
 
@@ -203,6 +208,8 @@ Create TABLE vehiculoPesado(
   	fechaVenSOAT DATE,
   	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 );
+
+
 
 
 
