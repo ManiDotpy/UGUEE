@@ -70,11 +70,10 @@ CREATE TABLE adminUsuario(
 CREATE TABLE urllmgDocumentoUsuario(
 	idDocumentoUsuario SERIAL PRIMARY KEY,
 	idUsuario INT,
-	urllmgDocumento TEXT,
-	nombreDocumento VARCHAR(60),
+	urllmgDocumento TEXT NOT NULL,
+	nombreDocumento VARCHAR(60) NOT NULL,
 	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
-		on DELETE CASCADE
-		ON UPDATE CASCADE
+		ON DELETE CASCADE
 );
 
 -- tabla PQRS
@@ -83,21 +82,20 @@ CREATE TABLE PQRS(
 	idUsuario INT,
 	tipoPQRS VARCHAR(60),
 	descripcion TEXT,
-	fecha VARCHAR(60),
+	fecha TIMESTAMP NOT NULL,
 	latitud DECIMAL(9,6),
 	longitud DECIMAL(9,6),
 	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
+		ON DELETE SET NULL
 );
 
 --tabla viaje
 CREATE TABLE viaje(
 	idViaje SERIAL PRIMARY KEY,
-	tiempoDeSalida TIMESTAMP,
+	tiempoDeSalida TIMESTAMP NOT NULL,
 	tiempoDeLlegada TIMESTAMP,
 	duracionViajeHoras NUMERIC(5,2),
-	estadoDelViaje VARCHAR(60),
+	estadoDelViaje VARCHAR(60) DEFAULT 'en curso',
 	ubicacionActualLatitud DECIMAL(9,6),
 	ubicacionActualLongitud DECIMAL(9,6)
 );
@@ -109,6 +107,7 @@ CREATE TABLE calificacion(
 	idViaje INT,
 	comentario TEXT,
 	puntuacionViaje INT,
+	CHECK(puntuacionViaje BETWEEN 0 AND 5),
 	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
 		ON DELETE SET NULL,
 	FOREIGN KEY (idViaje) REFERENCES viaje(idViaje)
@@ -119,7 +118,7 @@ CREATE TABLE calificacion(
 Create TABLE pasajero(
 	idUsuario INT PRIMARY KEY,
 	estatuto VARCHAR(60),
-	cantidadViajesTomados INT,
+	cantidadViajesTomados INT NOT NULL,
 	estadoPasajero VARCHAR(60) DEFAULT 'pendiente',
 	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
 		ON DELETE CASCADE
@@ -128,18 +127,18 @@ Create TABLE pasajero(
 -- tabla vehiculo
 CREATE TABLE vehiculo(
 	idVehiculo SERIAL PRIMARY KEY,
-	color VARCHAR(60),
-	numeroAsientos INT,
-	modelo VARCHAR(60),
-	marca VARCHAR(60)
+	color VARCHAR(60) NOT NULL,
+	numeroAsientos INT NOT NULL,
+	modelo VARCHAR(60) NOT NULL,
+	marca VARCHAR(60) NOT NULL
 );
 
 --tabla url_lmg_documento_vehiculo
 CREATE TABLE urllmgDocumentoVehiculo(
 	idDocumentoVehiculo SERIAL PRIMARY KEY,
 	idVehiculo INT,
-	urllmgDocumento TEXT,
-	nombreDocumento VARCHAR(60),
+	urllmgDocumento TEXT NOT NULL,
+	nombreDocumento VARCHAR(60) NOT NULL,
 	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 		ON DELETE CASCADE
 );
@@ -148,9 +147,9 @@ CREATE TABLE urllmgDocumentoVehiculo(
 CREATE TABLE conductor(
 	idUsuario INT PRIMARY KEY,
 	idVehiculo INT,
-	numeroDeLicencia INT,
-	estadoConductor VARCHAR(60) DEFAULT 'pendiente',
-	cantidadViajesRealizados INT,
+	numeroDeLicencia INT NOT NULL,
+	estadoConductor VARCHAR(60) NOT NULL DEFAULT 'pendiente',
+	cantidadViajesRealizados INT NOT NULL,
 	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 		ON DELETE SET NULL
 );
@@ -160,7 +159,7 @@ CREATE TABLE pasajeroViaje(
 	idPasajero INT PRIMARY KEY,
 	idViaje INT,
 	FOREIGN KEY (idPasajero) REFERENCES pasajero(idUsuario)
-		ON DELETE CASCADE,
+		ON DELETE SET NULL,
 	FOREIGN KEY (idViaje) REFERENCES viaje(idViaje)
 		ON DELETE CASCADE
 );
@@ -169,16 +168,18 @@ CREATE TABLE pasajeroViaje(
 CREATE TABLE ruta(
 	idRuta SERIAL PRIMARY KEY,
 	idVehiculo INT,
-	salidaLatitud DECIMAL(9,6),
-	salidaLongitud DECIMAL(9,6),
-	paradaLatidud DECIMAL(9,6),
-	paradaLongitud DECIMAL(9,6),
-	distancia NUMERIC(6,2),
-	horaDeSalida TIME,
-	fecha DATE,
-	tipoDeRuta VARCHAR(60),
-	estado VARCHAR(60) DEFAULT '',
-	asientosDisponibles INT
+	salidaLatitud DECIMAL(9,6) NOT NULL,
+	salidaLongitud DECIMAL(9,6) NOT NULL,
+	paradaLatidud DECIMAL(9,6) NOT NULL,
+	paradaLongitud DECIMAL(9,6) NOT NULL,
+	distancia NUMERIC(6,2) NOT NULL,
+	horaDeSalida TIME NOT NULL,
+	fecha DATE NOT NULL,
+	tipoDeRuta VARCHAR(60) NOT NULL,
+	estado VARCHAR(60) NOT NULL DEFAULT 'disponible',
+	asientosDisponibles INT NOT NULL,
+	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
+		ON DELETE SET NULL
 );
 
 --tabla ruta_conductor_viaje
@@ -190,32 +191,32 @@ CREATE TABLE rutaConductorViaje(
 	FOREIGN KEY (idRuta) REFERENCES ruta(idRuta)
 		ON DELETE CASCADE,
 	FOREIGN KEY (idConductor) REFERENCES conductor(idUsuario)
-		ON DELETE CASCADE,
+		ON DELETE SET NULL,
 	FOREIGN KEY (idViaje) REFERENCES viaje(idViaje)
+		ON DELETE SET NULL
 );
 
 --tabla vehiculo_ligero
 CREATE TABLE vehiculoLigero(
 	idVehiculo INT PRIMARY KEY,
-	nSerie TEXT,
-	tipo VARCHAR(60),
+	nSerie TEXT NOT NULL,
+	tipo VARCHAR(60) NOT NULL,
 	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 		ON DELETE CASCADE
 );
 
 --tabla vehiculo_pesado
-Create TABLE vehiculoPesado(
-	idVehiculo INT PRIMARY KEY,
-	placa CHAR(6),
-	categoriaViaje VARCHAR(60),
-	tipoVehiculo VARCHAR(60),
-	categoria VARCHAR(60),
-	fechaVenTecno DATE,
-	fechaVenSOAT DATE,
-	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
-		ON DELETE CASCADE
+CREATE TABLE vehiculoPesado(
+    idVehiculo INT PRIMARY KEY,
+    placa CHAR(6) NOT NULL CHECK (placa ~ '^[A-Z]{3}[0-9]{3}$'), 
+    categoriaViaje VARCHAR(60) NOT NULL,
+    tipoVehiculo VARCHAR(60) NOT NULL,
+    categoria VARCHAR(60) NOT NULL,
+    fechaVenTecno DATE NOT NULL,
+    fechaVenSOAT DATE NOT NULL,
+    FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
+        ON DELETE CASCADE
 );
-
 
 
 
