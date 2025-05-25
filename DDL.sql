@@ -218,6 +218,26 @@ CREATE TABLE vehiculoPesado(
         ON DELETE CASCADE
 );
 
+-- Función y trigger para garantizar exclusividad
+CREATE OR REPLACE FUNCTION verificar_exclusividad_vehiculo()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM vehiculoLigero WHERE idVehiculo = NEW.idVehiculo) AND
+       EXISTS (SELECT 1 FROM vehiculoPesado WHERE idVehiculo = NEW.idVehiculo) THEN
+        RAISE EXCEPTION 'Un vehículo no puede ser ligero y pesado al mismo tiempo';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Triggers 
+CREATE TRIGGER trigger_exclusividad_ligero
+BEFORE INSERT OR UPDATE ON vehiculoLigero
+FOR EACH ROW EXECUTE FUNCTION verificar_exclusividad_vehiculo();
+
+CREATE TRIGGER trigger_exclusividad_pesado
+BEFORE INSERT OR UPDATE ON vehiculoPesado
+FOR EACH ROW EXECUTE FUNCTION verificar_exclusividad_vehiculo();
 
 
 
