@@ -1,6 +1,6 @@
 ---Tabla institucion
 CREATE TABLE institucion(
-	idInstitucion SERIAL PRIMARY KEY,
+	idInstitucion INT PRIMARY KEY,
 	nombre VARCHAR(60) NOT NULL,
 	colorPrincipal VARCHAR(60) NOT NULL,
 	colorSecundario VARCHAR(60),
@@ -35,7 +35,7 @@ CREATE TABLE administrador(
 
 --tabla usuario
 CREATE TABLE usuario(
-	nIdentificacion SERIAL PRIMARY KEY,
+	nIdentificacion INT PRIMARY KEY,
 	idInstitucion INT,
 	tipoDocumento VARCHAR(60) NOT NULL,
 	contrasena VARCHAR(60) NOT NULL,
@@ -96,6 +96,7 @@ CREATE TABLE viaje(
 	tiempoDeLlegada TIMESTAMP,
 	duracionViajeHoras NUMERIC(5,2),
 	estadoDelViaje VARCHAR(60) DEFAULT 'en curso',
+	asientosDisponibles INT NOT NULL,
 	ubicacionActualLatitud DECIMAL(9,6),
 	ubicacionActualLongitud DECIMAL(9,6)
 );
@@ -177,7 +178,6 @@ CREATE TABLE ruta(
 	fecha DATE NOT NULL,
 	tipoDeRuta VARCHAR(60) NOT NULL,
 	estado VARCHAR(60) NOT NULL DEFAULT 'disponible',
-	asientosDisponibles INT NOT NULL,
 	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 		ON DELETE SET NULL
 );
@@ -208,7 +208,7 @@ CREATE TABLE vehiculoLigero(
 --tabla vehiculo_pesado
 CREATE TABLE vehiculoPesado(
     idVehiculo INT PRIMARY KEY,
-    placa CHAR(6) NOT NULL CHECK (placa ~ '^[A-Z]{3}[0-9]{3}$'), 
+    placa CHAR(6) NOT NULL CHECK, 
     categoriaViaje VARCHAR(60) NOT NULL,
     tipoVehiculo VARCHAR(60) NOT NULL,
     categoria VARCHAR(60) NOT NULL,
