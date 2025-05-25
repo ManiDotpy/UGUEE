@@ -191,7 +191,7 @@ CREATE TABLE rutaConductorViaje(
 	FOREIGN KEY (idRuta) REFERENCES ruta(idRuta)
 		ON DELETE CASCADE,
 	FOREIGN KEY (idConductor) REFERENCES conductor(idUsuario)
-		ON DELETE SET NULL,
+		ON DELETE CASCADE,
 	FOREIGN KEY (idViaje) REFERENCES viaje(idViaje)
 		ON DELETE SET NULL
 );
