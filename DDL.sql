@@ -92,11 +92,11 @@ CREATE TABLE PQRS(
 --tabla viaje
 CREATE TABLE viaje(
 	idViaje SERIAL PRIMARY KEY,
-	tiempoDeSalida TIMESTAMP,
+	tiempoDeSalida TIMESTAMP NOT NULL,
 	tiempoDeLlegada TIMESTAMP,
 	duracionViajeHoras NUMERIC(5,2),
-	estadoDelViaje VARCHAR(60) DEFAULT 'en curso',
-	asientosDisponibles INT,
+	estadoDelViaje VARCHAR(60) NOT NULL DEFAULT 'en curso',
+	asientosDisponibles INT NOT NULL,
 	ubicacionActualLatitud DECIMAL(9,6),
 	ubicacionActualLongitud DECIMAL(9,6)
 );
