@@ -118,7 +118,7 @@ CREATE TABLE calificacion(
 -- tabla pasajero
 Create TABLE pasajero(
 	idUsuario INT PRIMARY KEY,
-	estatuto VARCHAR(60),
+	estatuto VARCHAR(60) NOT NULL,
 	cantidadViajesTomados INT NOT NULL,
 	estadoPasajero VARCHAR(60) DEFAULT 'pendiente',
 	FOREIGN KEY (idUsuario) REFERENCES usuario(nIdentificacion)
@@ -151,6 +151,7 @@ CREATE TABLE conductor(
 	numeroDeLicencia INT NOT NULL,
 	estadoConductor VARCHAR(60) NOT NULL DEFAULT 'pendiente',
 	cantidadViajesRealizados INT NOT NULL,
+	estatuto VARCHAR(60) NOT NULL,
 	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 		ON DELETE SET NULL
 );
