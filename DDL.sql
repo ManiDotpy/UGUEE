@@ -199,7 +199,7 @@ CREATE TABLE rutaConductorViaje(
 --tabla vehiculo_ligero
 CREATE TABLE vehiculoLigero(
 	idVehiculo INT PRIMARY KEY,
-	nSerie TEXT NOT NULL,
+	nSerie TEXT NOT NULL UNIQUE,
 	tipo VARCHAR(60) NOT NULL,
 	FOREIGN KEY (idVehiculo) REFERENCES vehiculo(idVehiculo)
 		ON DELETE CASCADE
@@ -208,7 +208,7 @@ CREATE TABLE vehiculoLigero(
 --tabla vehiculo_pesado
 CREATE TABLE vehiculoPesado(
     idVehiculo INT PRIMARY KEY,
-    placa CHAR(6) NOT NULL CHECK, 
+    placa CHAR(6) NOT NULL UNIQUE, 
     categoriaViaje VARCHAR(60) NOT NULL,
     tipoVehiculo VARCHAR(60) NOT NULL,
     categoria VARCHAR(60) NOT NULL,
