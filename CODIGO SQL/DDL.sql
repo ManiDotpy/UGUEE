@@ -23,7 +23,7 @@ CREATE TABLE urlDocumentoInstitucion(
 );
 
 -- tabla Admin (admin es palabra registrada asi que administrador)
-CREATE TABLE administrador(
+CREATE TABLE monitor(
 	idAdmin SERIAL PRIMARY KEY,
 	idInstitucion INT,
 	contrasena VARCHAR(60) NOT NULL,
@@ -48,12 +48,13 @@ CREATE TABLE usuario(
 	numeroCasa VARCHAR(60) NOT NULL,
 	ciudad VARCHAR(60) NOT NULL,
 	codigoEstudiantil INT,
+	urlAvatar TEXT,
 	FOREIGN KEY (idInstitucion) REFERENCES institucion(idInstitucion)
 		ON DELETE CASCADE
 );
 
---tabla_admin_usuario
-CREATE TABLE adminUsuario(
+--tabla_monitor_usuario
+CREATE TABLE monitorusuario(
 	idAdmin INT,
 	idUsuario INT,
 	estadoUsuario VARCHAR(60) NOT NULL DEFAULT 'pendiente',
@@ -160,6 +161,7 @@ CREATE TABLE conductor(
 CREATE TABLE pasajeroViaje(
 	idPasajero INT PRIMARY KEY,
 	idViaje INT,
+	checkviaje BOOLEAN NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (idPasajero) REFERENCES pasajero(idUsuario)
 		ON DELETE SET NULL,
 	FOREIGN KEY (idViaje) REFERENCES viaje(idViaje)
@@ -172,7 +174,7 @@ CREATE TABLE ruta(
 	idVehiculo INT,
 	salidaLatitud DECIMAL(9,6) NOT NULL,
 	salidaLongitud DECIMAL(9,6) NOT NULL,
-	paradaLatidud DECIMAL(9,6) NOT NULL,
+	paradaLatitud DECIMAL(9,6) NOT NULL,
 	paradaLongitud DECIMAL(9,6) NOT NULL,
 	distancia NUMERIC(6,2) NOT NULL,
 	horaDeSalida TIME NOT NULL,
@@ -188,7 +190,7 @@ CREATE TABLE rutaConductorViaje(
 	idRuta INT,
 	idConductor INT,
 	idViaje INT,
-	PRIMARY KEY(idRuta, idConductor),
+	PRIMARY KEY(idRuta, idConductor,idviaje),
 	FOREIGN KEY (idRuta) REFERENCES ruta(idRuta)
 		ON DELETE CASCADE,
 	FOREIGN KEY (idConductor) REFERENCES conductor(idUsuario)

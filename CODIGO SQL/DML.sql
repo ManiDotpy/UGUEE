@@ -29,7 +29,7 @@ VALUES (
     'activo'
 );
 
-INSERT INTO administrador (idInstitucion, contrasena, nombreCompleto, correo)
+INSERT INTO monitor (idInstitucion, contrasena, nombreCompleto, correo)
 VALUES (
     1, 
     'hashed_password_123', 
@@ -37,7 +37,7 @@ VALUES (
     'juan.perez@utn.edu.ar'
 );
 
-INSERT INTO administrador (idInstitucion, contrasena, nombreCompleto, correo)
+INSERT INTO monitor (idInstitucion, contrasena, nombreCompleto, correo)
 VALUES (
     1, 
     'hashed_password_456', 
@@ -45,7 +45,7 @@ VALUES (
     'maria.gonzalez@utn.edu.ar'
 );
 
-INSERT INTO administrador (idInstitucion, contrasena, nombreCompleto, correo)
+INSERT INTO monitor (idInstitucion, contrasena, nombreCompleto, correo)
 VALUES (
     2, 
     'hashed_password_789', 
@@ -53,7 +53,7 @@ VALUES (
     'carlos.rodriguez@isfd.edu.ar'
 );
 
-INSERT INTO administrador (idInstitucion, contrasena, nombreCompleto, correo)
+INSERT INTO monitor (idInstitucion, contrasena, nombreCompleto, correo)
 VALUES (
     2, 
     'hashed_password_012', 
@@ -192,7 +192,7 @@ VALUES (
 );
 
 -- Marta Rodríguez fue aceptada por Juan Pérez
-INSERT INTO adminUsuario (idAdmin, idUsuario, estadoUsuario, descripcion, fechaRevision)
+INSERT INTO monitorusuario (idAdmin, idUsuario, estadoUsuario, descripcion, fechaRevision)
 VALUES (
     (SELECT idAdmin FROM administrador WHERE correo = 'juan.perez@utn.edu.ar'),
     (SELECT nIdentificacion FROM usuario WHERE correo = 'estudiante3@utn.edu.ar'),
@@ -202,7 +202,7 @@ VALUES (
 );
 
 -- Carlos Fernández fue aceptado por María González
-INSERT INTO adminUsuario (idAdmin, idUsuario, estadoUsuario, descripcion, fechaRevision)
+INSERT INTO monitorusuario (idAdmin, idUsuario, estadoUsuario, descripcion, fechaRevision)
 VALUES (
     (SELECT idAdmin FROM administrador WHERE correo = 'maria.gonzalez@utn.edu.ar'),
     (SELECT nIdentificacion FROM usuario WHERE correo = 'estudiante4@utn.edu.ar'),
